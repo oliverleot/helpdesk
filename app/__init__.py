@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 
 from app.config import Config
-from app.extensions import db
+from app.extensions import db, migrate
 
 
 def create_app():
@@ -9,6 +9,10 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
+
+    from app import models  # noqa: F401
+
+    migrate.init_app(app, db)
 
     @app.route("/health")
     def health():
