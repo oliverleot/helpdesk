@@ -1,0 +1,21 @@
+<div id="status-block">
+    <p><span class="badge bg-secondary">{{ ticket.status }}</span></p>
+
+    {% if current_user.role in ["AGENT", "ADMIN"] %}
+    <form
+        method="post"
+        action="{{ url_for('tickets.update_status', ticket_id=ticket.id) }}"
+        hx-post="{{ url_for('tickets.update_status', ticket_id=ticket.id) }}"
+        hx-target="#status-block"
+        hx-swap="outerHTML"
+        class="mb-3"
+    >
+        <select name="status" class="form-select mb-2">
+            {% for s in statuses %}
+            <option value="{{ s }}" {% if s == ticket.status %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-sm btn-outline-primary" type="submit">Cambiar estado</button>
+    </form>
+    {% endif %}
+</div>

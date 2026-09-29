@@ -1,0 +1,29 @@
+<div id="comments-section">
+    <h3>Comentarios</h3>
+    {% for comment in ticket.comments %}
+    <div class="mb-2 border-bottom pb-2">
+        <strong>{{ comment.user.username }}</strong> - {{ comment.created_at.strftime("%Y-%m-%d %H:%M") }}
+        <p>{{ comment.content }}</p>
+    </div>
+    {% else %}
+    <p>Sin comentarios todavia.</p>
+    {% endfor %}
+
+    <form
+        method="post"
+        action="{{ url_for('tickets.add_comment', ticket_id=ticket.id) }}"
+        hx-post="{{ url_for('tickets.add_comment', ticket_id=ticket.id) }}"
+        hx-target="#comments-section"
+        hx-swap="outerHTML"
+        novalidate
+    >
+        {{ comment_form.hidden_tag() }}
+        <div class="mb-2">
+            {{ comment_form.content(class="form-control", rows=3, placeholder="Escribi un comentario") }}
+            {% for error in comment_form.content.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button class="btn btn-primary btn-sm" type="submit">Comentar</button>
+    </form>
+</div>

@@ -1,0 +1,7 @@
+<ul>
+    {% for h in ticket.history %}
+    <li>{{ h.created_at.strftime("%Y-%m-%d %H:%M") }} - {{ h.user.username }} cambio {{ h.field }}: {{ h.old_value or "—" }} &rarr; {{ h.new_value }}</li>
+    {% else %}
+    <li>Sin historial todavia.</li>
+    {% endfor %}
+</ul>

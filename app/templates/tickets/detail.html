@@ -17,61 +17,19 @@
         </ul>
     </div>
     <div class="col-md-4">
-        <p>
-            <span class="badge bg-secondary">{{ ticket.status }}</span>
-            <span class="badge bg-info text-dark">{{ ticket.priority }}</span>
-        </p>
-
-        {% if current_user.role in ["AGENT", "ADMIN"] %}
-        <form method="post" action="{{ url_for('tickets.update_status', ticket_id=ticket.id) }}" class="mb-3">
-            <select name="status" class="form-select mb-2">
-                {% for s in statuses %}
-                <option value="{{ s }}" {% if s == ticket.status %}selected{% endif %}>{{ s }}</option>
-                {% endfor %}
-            </select>
-            <button class="btn btn-sm btn-outline-primary" type="submit">Cambiar estado</button>
-        </form>
-
-        <form method="post" action="{{ url_for('tickets.update_priority', ticket_id=ticket.id) }}">
-            <select name="priority" class="form-select mb-2">
-                {% for p in priorities %}
-                <option value="{{ p }}" {% if p == ticket.priority %}selected{% endif %}>{{ p }}</option>
-                {% endfor %}
-            </select>
-            <button class="btn btn-sm btn-outline-primary" type="submit">Cambiar prioridad</button>
-        </form>
-        {% endif %}
+        {% include "tickets/partials/status_block.html" %}
+        {% include "tickets/partials/priority_block.html" %}
     </div>
 </div>
 
 <hr>
 
-<h3>Comentarios</h3>
-{% for comment in ticket.comments %}
-<div class="mb-2 border-bottom pb-2">
-    <strong>{{ comment.user.username }}</strong> - {{ comment.created_at.strftime("%Y-%m-%d %H:%M") }}
-    <p>{{ comment.content }}</p>
-</div>
-{% else %}
-<p>Sin comentarios todavia.</p>
-{% endfor %}
-
-<form method="post" action="{{ url_for('tickets.add_comment', ticket_id=ticket.id) }}" novalidate>
-    {{ comment_form.hidden_tag() }}
-    <div class="mb-2">
-        {{ comment_form.content(class="form-control", rows=3, placeholder="Escribi un comentario") }}
-    </div>
-    <button class="btn btn-primary btn-sm" type="submit">Comentar</button>
-</form>
+{% include "tickets/partials/comments_section.html" %}
 
 <hr>
 
 <h3>Historial</h3>
-<ul>
-    {% for h in ticket.history %}
-    <li>{{ h.created_at.strftime("%Y-%m-%d %H:%M") }} - {{ h.user.username }} cambio {{ h.field }}: {{ h.old_value or "—" }} &rarr; {{ h.new_value }}</li>
-    {% else %}
-    <li>Sin historial todavia.</li>
-    {% endfor %}
-</ul>
+<div id="history-block">
+    {% include "tickets/partials/history_list.html" %}
+</div>
 {% endblock %}

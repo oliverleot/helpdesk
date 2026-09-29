@@ -79,6 +79,14 @@ def update_status(ticket_id):
     ticket = ticket_service.get_ticket_or_403(ticket_id, current_user)
     new_status = request.form.get("status")
     ticket_service.change_status(ticket, new_status, current_user)
+
+    if request.headers.get("HX-Request"):
+        status_html = render_template(
+            "tickets/partials/status_block.html", ticket=ticket, statuses=ALL_STATUSES
+        )
+        history_html = render_template("tickets/partials/history_oob.html", ticket=ticket)
+        return status_html + history_html
+
     return redirect(url_for("tickets.detail", ticket_id=ticket.id))
 
 
@@ -89,6 +97,14 @@ def update_priority(ticket_id):
     ticket = ticket_service.get_ticket_or_403(ticket_id, current_user)
     new_priority = request.form.get("priority")
     ticket_service.change_priority(ticket, new_priority, current_user)
+
+    if request.headers.get("HX-Request"):
+        priority_html = render_template(
+            "tickets/partials/priority_block.html", ticket=ticket, priorities=ALL_PRIORITIES
+        )
+        history_html = render_template("tickets/partials/history_oob.html", ticket=ticket)
+        return priority_html + history_html
+
     return redirect(url_for("tickets.detail", ticket_id=ticket.id))
 
 
@@ -97,6 +113,19 @@ def update_priority(ticket_id):
 def add_comment(ticket_id):
     ticket = ticket_service.get_ticket_or_403(ticket_id, current_user)
     form = CommentForm()
+
     if form.validate_on_submit():
         ticket_service.add_comment(ticket, current_user, form.content.data)
+        if request.headers.get("HX-Request"):
+            return render_template(
+                "tickets/partials/comments_section.html",
+                ticket=ticket,
+                comment_form=CommentForm(),
+            )
+        return redirect(url_for("tickets.detail", ticket_id=ticket.id))
+
+    if request.headers.get("HX-Request"):
+        return render_template(
+            "tickets/partials/comments_section.html", ticket=ticket, comment_form=form
+        )
     return redirect(url_for("tickets.detail", ticket_id=ticket.id))

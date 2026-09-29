@@ -1,0 +1,20 @@
+<div id="priority-block">
+    <p><span class="badge bg-info text-dark">{{ ticket.priority }}</span></p>
+
+    {% if current_user.role in ["AGENT", "ADMIN"] %}
+    <form
+        method="post"
+        action="{{ url_for('tickets.update_priority', ticket_id=ticket.id) }}"
+        hx-post="{{ url_for('tickets.update_priority', ticket_id=ticket.id) }}"
+        hx-target="#priority-block"
+        hx-swap="outerHTML"
+    >
+        <select name="priority" class="form-select mb-2">
+            {% for p in priorities %}
+            <option value="{{ p }}" {% if p == ticket.priority %}selected{% endif %}>{{ p }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-sm btn-outline-primary" type="submit">Cambiar prioridad</button>
+    </form>
+    {% endif %}
+</div>
