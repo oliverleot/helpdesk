@@ -24,8 +24,10 @@ def create_app():
 
     from app.routes.auth import auth_bp
     from app.routes.tickets import tickets_bp
+    from app.routes.dashboard import dashboard_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(tickets_bp)
+    app.register_blueprint(dashboard_bp)
 
     @app.route("/health")
     def health():

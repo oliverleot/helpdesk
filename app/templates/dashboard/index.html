@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Dashboard</h1>
+<p class="text-muted">
+    {% if metrics.is_global %}
+        Metricas globales de todos los tickets.
+    {% else %}
+        Metricas de tus propios tickets.
+    {% endif %}
+</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle text-muted">Total</h6>
+                <p class="card-text fs-2">{{ metrics.total }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle text-muted">Asignados a mi</h6>
+                <p class="card-text fs-2">{{ metrics.assigned_to_me }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center border-danger">
+            <div class="card-body">
+                <h6 class="card-subtitle text-muted">Urgentes</h6>
+                <p class="card-text fs-2 text-danger">{{ metrics.urgent }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5>Por estado</h5>
+<div class="row g-3">
+    <div class="col-6 col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle text-muted">Open</h6>
+                <p class="card-text fs-4">{{ metrics.open }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle text-muted">In progress</h6>
+                <p class="card-text fs-4">{{ metrics.in_progress }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle text-muted">Waiting</h6>
+                <p class="card-text fs-4">{{ metrics.waiting }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle text-muted">Resolved</h6>
+                <p class="card-text fs-4">{{ metrics.resolved }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle text-muted">Closed</h6>
+                <p class="card-text fs-4">{{ metrics.closed }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
