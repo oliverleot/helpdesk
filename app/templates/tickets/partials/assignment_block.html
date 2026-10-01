@@ -1,0 +1,28 @@
+<div id="assignment-block">
+    <p><strong>Asignado a:</strong> {{ ticket.agent.username if ticket.agent else "Sin asignar" }}</p>
+
+    {% if error %}
+    <div class="alert alert-danger py-1 px-2 small">{{ error }}</div>
+    {% endif %}
+
+    {% if current_user.role in ["AGENT", "ADMIN"] %}
+    <form
+        method="post"
+        action="{{ url_for('tickets.assign_ticket', ticket_id=ticket.id) }}"
+        hx-post="{{ url_for('tickets.assign_ticket', ticket_id=ticket.id) }}"
+        hx-target="#assignment-block"
+        hx-swap="outerHTML"
+        class="mb-3"
+    >
+        <select name="agent_id" class="form-select mb-2">
+            <option value="">Sin asignar</option>
+            {% for a in agents %}
+            <option value="{{ a.id }}" {% if ticket.agent and a.id == ticket.agent.id %}selected{% endif %}>
+                {{ a.username }} ({{ a.role }})
+            </option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-sm btn-outline-primary" type="submit">Asignar</button>
+    </form>
+    {% endif %}
+</div>

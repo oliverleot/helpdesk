@@ -6,7 +6,7 @@ from app.extensions import db
 from app.models.ticket import Ticket, TicketStatus
 from app.models.comment import Comment
 from app.models.ticket_history import TicketHistory
-from app.models.user import Role
+from app.models.user import Role, User
 
 
 def can_view_ticket(user, ticket):
@@ -90,3 +90,47 @@ def add_comment(ticket, user, content):
     db.session.add(comment)
     db.session.commit()
     return comment
+
+
+def get_available_agents():
+    # Nota: User no tiene un campo active/is_active todavia, asi que por ahora
+    # devuelve todos los AGENT/ADMIN. Si se agrega ese campo mas adelante,
+    # filtrar aca por User.active == True.
+    return (
+        User.query.filter(User.role.in_([Role.AGENT, Role.ADMIN]))
+        .order_by(User.username)
+        .all()
+    )
+
+
+def assign_ticket(ticket, agent_id, user):
+    agent = None
+    if agent_id:
+        try:
+            agent = db.session.get(User, int(agent_id))
+        except (TypeError, ValueError):
+            agent = None
+        if agent is None or agent.role not in (Role.AGENT, Role.ADMIN):
+            raise ValueError("El usuario seleccionado no es un agente valido.")
+
+    old_value = ticket.agent.username if ticket.agent else None
+    new_value = agent.username if agent else None
+
+    if old_value == new_value:
+        return ticket
+
+    ticket.assigned_to = agent.id if agent else None
+
+    db.session.add(TicketHistory(
+        ticket_id=ticket.id,
+        user_id=user.id,
+        field="assigned_to",
+        old_value=old_value,
+        new_value=new_value or "Sin asignar",
+    ))
+    try:
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        raise
+    return ticket

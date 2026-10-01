@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 
 from flask_login import login_required, current_user
 
@@ -69,6 +69,7 @@ def detail(ticket_id):
         comment_form=comment_form,
         statuses=ALL_STATUSES,
         priorities=ALL_PRIORITIES,
+        agents=ticket_service.get_available_agents(),
     )
 
 
@@ -105,6 +106,34 @@ def update_priority(ticket_id):
         history_html = render_template("tickets/partials/history_oob.html", ticket=ticket)
         return priority_html + history_html
 
+    return redirect(url_for("tickets.detail", ticket_id=ticket.id))
+
+
+@tickets_bp.route("/<int:ticket_id>/assign", methods=["POST"])
+@login_required
+@roles_required(Role.AGENT, Role.ADMIN)
+def assign_ticket(ticket_id):
+    ticket = ticket_service.get_ticket_or_403(ticket_id, current_user)
+    agent_id = request.form.get("agent_id")
+    error = None
+
+    try:
+        ticket_service.assign_ticket(ticket, agent_id, current_user)
+    except ValueError as e:
+        error = str(e)
+
+    if request.headers.get("HX-Request"):
+        assignment_html = render_template(
+            "tickets/partials/assignment_block.html",
+            ticket=ticket,
+            agents=ticket_service.get_available_agents(),
+            error=error,
+        )
+        history_html = render_template("tickets/partials/history_oob.html", ticket=ticket)
+        return assignment_html + history_html
+
+    if error:
+        flash(error, "danger")
     return redirect(url_for("tickets.detail", ticket_id=ticket.id))
 
 

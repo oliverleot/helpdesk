@@ -7,7 +7,6 @@
         <p>{{ ticket.description }}</p>
         <ul class="list-unstyled">
             <li><strong>Creado por:</strong> {{ ticket.creator.username }}</li>
-            <li><strong>Asignado a:</strong> {{ ticket.agent.username if ticket.agent else "Sin asignar" }}</li>
             <li><strong>Categoria:</strong> {{ ticket.category }}</li>
             <li><strong>Creado:</strong> {{ ticket.created_at.strftime("%Y-%m-%d %H:%M") }}</li>
             <li><strong>Actualizado:</strong> {{ ticket.updated_at.strftime("%Y-%m-%d %H:%M") }}</li>
@@ -19,6 +18,7 @@
     <div class="col-md-4">
         {% include "tickets/partials/status_block.html" %}
         {% include "tickets/partials/priority_block.html" %}
+        {% include "tickets/partials/assignment_block.html" %}
     </div>
 </div>
 
