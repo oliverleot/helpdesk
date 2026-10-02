@@ -1,8 +1,9 @@
 # HelpDesk
 
-Sistema web interno de gestión de tickets de soporte: empleados reportan problemas, y agentes de soporte los reciben, los asignan, les cambian estado/prioridad y los resuelven. Cada cambio relevante queda registrado en un historial.
+Sistema web interno de gestión de tickets de soporte: los empleados reportan problemas y los agentes de soporte pueden recibirlos, asignarlos, cambiar su estado y prioridad, agregar comentarios y resolverlos. Cada cambio relevante queda registrado en un historial.
 
-Proyecto de portafolio enfocado en demostrar una base backend sólida con Flask: autenticación real, autorización por roles aplicada en el servidor (no solo ocultando botones), separación de responsabilidades por capas, interacciones dinámicas con HTMX, tests automatizados y CI.
+Proyecto desarrollado con Flask, PostgreSQL y HTMX, incorporando autenticación, roles y permisos, separación por capas, tests automatizados y CI.
+
 
 ## Características
 
@@ -172,6 +173,3 @@ helpdesk/
 - **Debug**: `FLASK_DEBUG` es `false` por defecto; nunca queda activado a menos que se declare explícitamente.
 - **Transacciones**: operaciones con riesgo real de conflicto (registro de usuario, asignación de ticket) hacen `rollback()` ante un `IntegrityError` en vez de dejar la sesión de base de datos en un estado inconsistente.
 
-## Screenshots
-
-_(pendiente — agregar capturas del dashboard, el detalle de un ticket y el flujo de asignación)_
