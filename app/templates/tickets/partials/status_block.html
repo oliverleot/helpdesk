@@ -10,6 +10,7 @@
         hx-swap="outerHTML"
         class="mb-3"
     >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <select name="status" class="form-select mb-2">
             {% for s in statuses %}
             <option value="{{ s }}" {% if s == ticket.status %}selected{% endif %}>{{ s }}</option>

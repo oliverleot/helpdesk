@@ -23,7 +23,7 @@ def get_tickets_for_user(user):
 
 
 def get_ticket_or_403(ticket_id, user):
-    ticket = Ticket.query.get_or_404(ticket_id)
+    ticket = db.get_or_404(Ticket, ticket_id)
     if not can_view_ticket(user, ticket):
         abort(403)
     return ticket

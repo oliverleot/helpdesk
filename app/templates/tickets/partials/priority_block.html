@@ -9,6 +9,7 @@
         hx-target="#priority-block"
         hx-swap="outerHTML"
     >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <select name="priority" class="form-select mb-2">
             {% for p in priorities %}
             <option value="{{ p }}" {% if p == ticket.priority %}selected{% endif %}>{{ p }}</option>

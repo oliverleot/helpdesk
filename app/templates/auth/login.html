@@ -3,9 +3,11 @@
 <h1>Iniciar sesión</h1>
 <form method="post" novalidate>
     {{ form.hidden_tag() }}
+    {% if form.csrf_token is defined %}
     {% for error in form.csrf_token.errors %}
     <div class="alert alert-danger">La sesión del formulario expiró. Recarga la página e intenta de nuevo.</div>
     {% endfor %}
+    {% endif %}
     <div class="mb-3">
         {{ form.email.label(class="form-label") }}
         {{ form.email(class="form-control") }}
